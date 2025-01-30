@@ -9,8 +9,8 @@ import (
 // Timer struct to manage countdown
 type Timer struct {
 	TotalSeconds int
-	Pause        bool
-	Stop         bool
+	isPaused     bool
+	isStopped    bool
 	Log          *utils.Logger
 }
 
@@ -18,26 +18,24 @@ type Timer struct {
 func NewTimer(minutes int) *Timer {
 	return &Timer{
 		TotalSeconds: minutes * 60,
-		Pause:        false,
-		Stop:         false,
+		isPaused:     false,
+		isStopped:    false,
 		Log:          utils.GetLogger(),
 	}
 }
 
 // Start begins the countdown timer
 func (t *Timer) Start() {
-	t.Stop = false
+	t.isStopped = false
 	t.Log.Info("Timer started for", t.TotalSeconds/60, "minutes.")
 
 	for t.TotalSeconds > 0 {
-		// Stop the timer if reset
-		if t.Stop {
+		if t.isStopped {
 			t.Log.Warn("Timer Stopped and Reset")
 			return
 		}
 
-		// Pause the timer if requested
-		if t.Pause {
+		if t.isPaused {
 			t.Log.Warn("Timer Paused")
 			time.Sleep(1 * time.Second)
 			continue
@@ -46,11 +44,44 @@ func (t *Timer) Start() {
 		// Update the timer display
 		mins := t.TotalSeconds / 60
 		secs := t.TotalSeconds % 60
-		t.Log.Info(fmt.Sprintf("Time Left: %02d:%02d", mins, secs))
+		fmt.Printf("\rTime Left: %02d:%02d  ", mins, secs)
 
 		time.Sleep(1 * time.Second)
 		t.TotalSeconds--
 	}
 
 	t.Log.Info("Focus Session Completed! Take a break.")
+}
+
+// Pause pauses the timer
+func (t *Timer) Pause() {
+	if !t.isPaused {
+		t.isPaused = true
+		t.Log.Warn("Timer Paused")
+	} else {
+		t.Log.Warn("Timer is already paused")
+	}
+}
+
+// Resume resumes the timer
+func (t *Timer) Resume() {
+	if t.isPaused {
+		t.isPaused = false
+		t.Log.Info("Timer Resumed")
+	} else {
+		t.Log.Warn("Timer is not paused")
+	}
+}
+
+// Reset stops the timer and resets it
+func (t *Timer) Reset() {
+	t.isStopped = true
+	t.TotalSeconds = 0
+	t.Log.Info("Timer Reset")
+}
+
+// Stop completely stops the timer
+func (t *Timer) Stop() {
+	t.isStopped = true
+	t.Log.Info("Timer Stopped")
 }
