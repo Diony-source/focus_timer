@@ -4,7 +4,6 @@ import (
 	"focus_timer/commands"
 	"focus_timer/services"
 	"focus_timer/utils"
-	"fmt"
 )
 
 func main() {
