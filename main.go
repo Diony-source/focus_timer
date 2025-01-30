@@ -11,7 +11,7 @@ func main() {
 	log.Info("Focus Timer App Started")
 
 	durationInput := utils.GetUserInput("Enter focus duration (minutes): ")
-	duration := utils.ParseDuration(durationInput) // Kullanıcı girdisini temizler
+	duration := utils.ParseDuration(durationInput) // Artık hata vermeyecek
 
 	timer := services.NewTimer(duration)
 	go timer.Start()
