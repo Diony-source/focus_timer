@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Logger yapılandırması
+// Logger configuration
 type Logger struct {
 	*logrus.Logger
 }
